@@ -1,0 +1,19 @@
+{
+  "name": "@so/ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "typings": "dist/typings/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hyperhtml-element": "^3.1.0",
+    "rxjs": "latest"
+  }
+}
