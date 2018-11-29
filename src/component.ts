@@ -1,11 +1,14 @@
 import HyperHTMLElement from "hyperhtml-element";
 import {Observable, Subject} from "./rx";
 import {UI} from "./ui";
+import {importStyle} from "./import-styles";
 
 const definitions: Function[] = [];
 
 export function defineComponents() {
-    definitions.forEach(f => f());
+    while (definitions.length) {
+        definitions.pop()();
+    }
 }
 
 export function Component(info: {
@@ -13,10 +16,11 @@ export function Component(info: {
     observedAttributes?: string[],
     booleanAttributes?: string[],
     template: Function,
-    style: Function
+    style: string
 }) {
     return (target) => {
         let Id = 0;
+        importStyle(info.style, target.name);
         const elementConstructor = class extends HyperHTMLElement {
             static observedAttributes = info.observedAttributes || [];
             static booleanAttributes = info.booleanAttributes || [];
@@ -25,31 +29,31 @@ export function Component(info: {
             handlerProxy: any;
 
             renderState(state) {
-                const strs = [];
-                let raw = '';
-                const vals = [];
-                const html = (strings, ...values) => {
-                    raw += strings.raw;
-                    if (strs.length) {
-                        strs.push(strs.pop() + strings[0]);
-                        strs.push(...strings.slice(1));
-                    } else {
-                        strs.push(...strings);
-                    }
-                    vals.push(...values);
-                };
-                info.template(html, state, this.handlerProxy);
+                // const strs = [];
+                // let raw = '';
+                // const vals = [];
+                // const html = (strings, ...values) => {
+                //     raw += strings.raw;
+                //     if (strs.length) {
+                //         strs.push(strs.pop() + strings[0]);
+                //         strs.push(...strings.slice(1));
+                //     } else {
+                //         strs.push(...strings);
+                //     }
+                //     vals.push(...values);
+                // };
+                info.template(this.html.bind(this), state, this.handlerProxy);
                 // console.log(strs);
                 // console.log(vals);
-                if (typeof info.style === "function") {
-                    info.style(html, state);
-                } else {
-                    html`${info.style}`;
-                }
+                // if (typeof info.style === "function") {
+                //     info.style(html, state);
+                // } else {
+                //     html`${info.style}`;
+                // }
                 // console.log(strs);
                 // console.log(vals);
-                strs['raw'] = raw;
-                this.html(strs as any, ...vals);
+                // strs['raw'] = raw;
+                // this.html(strs as any, ...vals);
                 this.component.Render$.next();
             }
 

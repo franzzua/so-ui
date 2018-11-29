@@ -2,7 +2,7 @@ import {map, NEVER, Observable, of, ReplaySubject, scan, startWith} from "./rx";
 
 export abstract class HyperComponent<TState = any, TEvents = any> {
 
-    private element: Element;
+    protected element: Element;
 
     State$: Observable<TState> = of(null);
     Actions$: Observable<{ type: string; payload?: any }> = NEVER;
